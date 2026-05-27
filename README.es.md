@@ -153,6 +153,11 @@ Tipos de entregables:
 - Automatizar ejecución diaria/semanal (scheduler).
 - Publicar salidas en dashboard ejecutivo.
 
+## Repositorio relacionado
+
+- Capa de decision: **AI-SEO-Toolkit** (analisis AI SEO de 10 modulos y plan de accion priorizado)
+- Capa de datos: **SEO-as-Code-Toolkit** (este repositorio)
+
 ## Autor
 
 Proyecto desarrollado por **Emanuel / SEO as Code** para operación SEO data-driven a nivel empresa.

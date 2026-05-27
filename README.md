@@ -153,6 +153,11 @@ Deliverables:
 - Automate daily/weekly execution (scheduler).
 - Publish outputs to an executive dashboard.
 
+## Related repository
+
+- Decision layer: **AI-SEO-Toolkit** (10-module AI SEO analysis and prioritized action plans)
+- Data layer: **SEO-as-Code-Toolkit** (this repository)
+
 ## Author
 
 Built by **Emanuel / SEO as Code** for enterprise-grade, data-driven SEO operations.
