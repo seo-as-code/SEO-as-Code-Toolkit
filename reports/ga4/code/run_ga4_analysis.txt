@@ -1,0 +1,4 @@
+python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_traffic_last30days.csv"
+
+# Opcional (si quieres otra ruta o salida):
+python scripts/ga4/ga4_analyze_enterprise.py --input "C:\ruta\otro_ga4.csv" --output-dir "C:\Users\emami\proyecto_seo\reports\ga4"

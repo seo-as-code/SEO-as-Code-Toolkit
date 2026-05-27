@@ -1,0 +1,4 @@
+python scripts/gsc/gsc_analyze_enterprise.py
+
+# Opcional (si quieres forzar un CSV concreto y thresholds custom):
+python scripts/gsc/gsc_analyze_enterprise.py --input "C:\ruta\tu_gsc.csv" --min-impressions 500 --low-ctr-threshold 0.02 --position-floor 4 --output-dir "C:\Users\emami\proyecto_seo\reports\gsc"

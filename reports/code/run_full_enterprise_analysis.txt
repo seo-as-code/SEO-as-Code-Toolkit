@@ -1,0 +1,4 @@
+python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibiza.com"
+
+# Opcional (todo parametrizado):
+python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibiza.com" --gsc-input "C:\ruta\tu_gsc.csv" --ga4-input "C:\Users\emami\proyecto_seo\data\raw\ga4_traffic_last30days.csv" --min-impressions 500 --low-ctr-threshold 0.02 --position-floor 4

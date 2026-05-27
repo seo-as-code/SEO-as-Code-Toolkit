@@ -1,0 +1,4 @@
+python scripts/crux/crux_analyze_enterprise.py --origin "https://studiorethinkibiza.com"
+
+# Opcional (si quieres key file o output custom):
+python scripts/crux/crux_analyze_enterprise.py --origin "https://studiorethinkibiza.com" --key-file "C:\Users\emami\proyecto_seo\scripts\crux\crux_key.txt" --output-dir "C:\Users\emami\proyecto_seo\reports\crux"
