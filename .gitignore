@@ -1,6 +1,9 @@
 # Separate AI SEO repository (published independently)
 ai-seo-toolkit/
 
+# Local-only workspace (never commit)
+private/
+
 # Python
 __pycache__/
 *.py[cod]
