@@ -42,6 +42,11 @@ Thumbs.db
 *.tmp
 *.bak
 
+# Root-level data exports (never commit)
+/gsc_*.csv
+/ga4_*.csv
+/ga4_report*.csv
+
 # Data outputs (keep folder structure, ignore large local exports)
 data/raw/*.csv
 data/processed/*.csv
