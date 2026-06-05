@@ -7,22 +7,15 @@ from google.analytics.data_v1beta import BetaAnalyticsDataClient
 from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
 from google.api_core.exceptions import PermissionDenied
 
-# ============================
-# CONFIGURACIÓN DE RUTAS
-# ============================
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CREDENTIALS_DIR = os.path.join(BASE_DIR, "Credentials")
 DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+OUTPUT_FILE = "ga4_last30days.csv"
 
-GA_CREDENTIALS_PATH = os.path.join(CREDENTIALS_DIR, "ga_credentials.json")
 SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
 DEFAULT_PROPERTY_ID = os.getenv("GA4_PROPERTY_ID", "362766096")
 
-# ============================
-# CARGAR TOKEN
-# ============================
 
 def load_credentials():
     token_candidates = [
@@ -53,9 +46,6 @@ def load_credentials():
 
     raise ValueError(f"Formato de token no soportado en: {token_path}")
 
-# ============================
-# EXTRAER DATOS GA4
-# ============================
 
 def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
     creds = load_credentials()
@@ -63,9 +53,19 @@ def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
 
     request = RunReportRequest(
         property=f"properties/{property_id}",
-        dimensions=[Dimension(name="date"), Dimension(name="sessionSourceMedium")],
-        metrics=[Metric(name="sessions"), Metric(name="totalUsers"), Metric(name="screenPageViews")],
+        dimensions=[
+            Dimension(name="date"),
+            Dimension(name="sessionSourceMedium"),
+            Dimension(name="pagePath"),
+            Dimension(name="pageTitle"),
+        ],
+        metrics=[
+            Metric(name="sessions"),
+            Metric(name="totalUsers"),
+            Metric(name="screenPageViews"),
+        ],
         date_ranges=[DateRange(start_date="30daysAgo", end_date="yesterday")],
+        limit=100000,
     )
 
     try:
@@ -83,6 +83,8 @@ def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
             {
                 "date": row.dimension_values[0].value,
                 "source_medium": row.dimension_values[1].value,
+                "page_path": row.dimension_values[2].value,
+                "page_title": row.dimension_values[3].value,
                 "sessions": int(row.metric_values[0].value),
                 "users": int(row.metric_values[1].value),
                 "pageviews": int(row.metric_values[2].value),
@@ -90,11 +92,14 @@ def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
         )
 
     df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(["sessions", "pageviews"], ascending=False)
+
     os.makedirs(DATA_DIR, exist_ok=True)
-    output_path = os.path.join(DATA_DIR, "ga4_traffic_last30days.csv")
+    output_path = os.path.join(DATA_DIR, OUTPUT_FILE)
     df.to_csv(output_path, index=False, encoding="utf-8")
 
-    print(f"✅ Exportado: {output_path}")
+    print(f"✅ Exportado: {output_path}  Filas: {len(rows)}")
     return output_path
 
 

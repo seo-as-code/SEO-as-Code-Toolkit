@@ -23,10 +23,10 @@ def run_step(command: list[str], label: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Maestro enterprise para analisis SEO (GSC + GA4 + CrUX).")
     parser.add_argument("--gsc-input", default="", help="Ruta CSV GSC. Si vacio, usa el mas reciente.")
-    parser.add_argument("--ga4-input", default=os.path.join(BASE_DIR, "data", "raw", "ga4_traffic_last30days.csv"))
-    parser.add_argument("--origin", required=True, help="Origin para CrUX, ej: https://studiorethinkibiza.com")
+    parser.add_argument("--ga4-input", default=os.path.join(BASE_DIR, "data", "raw", "ga4_last30days.csv"))
+    parser.add_argument("--origin", required=True, help="Origin para CrUX, ej: https://your-domain.com")
     parser.add_argument("--crux-key-file", default=os.path.join(SCRIPTS_DIR, "crux", "crux_key.txt"))
-    parser.add_argument("--min-impressions", type=int, default=300)
+    parser.add_argument("--min-impressions", type=int, default=50)
     parser.add_argument("--low-ctr-threshold", type=float, default=0.02)
     parser.add_argument("--position-floor", type=float, default=4.0)
     args = parser.parse_args()

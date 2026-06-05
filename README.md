@@ -21,6 +21,12 @@ This repository implements an **SEO-as-Code** approach: repeatable processes, Gi
 - Version control with Git + GitHub.
 - Secret protection via `.gitignore`.
 
+## Terminal commands (cheatsheet)
+
+Ordered table with **all pipeline commands** (data extraction, enterprise analysis, AI modules 01–12):
+
+→ **[comandos/COMANDOS_TERMINAL.md](comandos/COMANDOS_TERMINAL.md)**
+
 ## Project architecture
 
 ```text
@@ -63,7 +69,7 @@ proyecto_seo/
 Example:
 
 ```bash
-python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibiza.com"
+python scripts/maestro_analisis_enterprise.py --origin "https://your-domain.com"
 ```
 
 ### GSC Enterprise
@@ -71,7 +77,7 @@ python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibi
 - `scripts/gsc/gsc_analyze_enterprise.py`
 - KPIs: clicks, impressions, weighted CTR, weighted position.
 - Analysis: top queries, top pages, SEO opportunities, cannibalization.
-- Output: CSV + executive summary in `reports/gsc/`.
+- Output: Excel (`gsc_report_*.xlsx`, 5 sheets) + summary `.md` in `reports/gsc/`.
 
 Example:
 
@@ -90,7 +96,7 @@ python scripts/gsc/gsc_analyze_enterprise.py --min-impressions 500 --low-ctr-thr
 Example:
 
 ```bash
-python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_traffic_last30days.csv"
+python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_last30days.csv"
 ```
 
 ### CrUX Enterprise
@@ -104,7 +110,7 @@ python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_se
 Example:
 
 ```bash
-python scripts/crux/crux_analyze_enterprise.py --origin "https://studiorethinkibiza.com"
+python scripts/crux/crux_analyze_enterprise.py --origin "https://your-domain.com"
 ```
 
 ## Quick run (copy/paste)
@@ -131,9 +137,21 @@ Deliverables:
 - `*_executive_summary_*.md` (executive summary)
 - `*.csv` (detailed analytics for BI/Excel/QA)
 
+## Local site configuration
+
+GSC/CrUX scripts read your domain from a **local** file (not committed to GitHub):
+
+```powershell
+copy config\site.local.yaml.example config\site.local.yaml
+```
+
+Edit `config/site.local.yaml` with your `origin`, `gsc_site_url`, and `sitemap_url`.
+
 ## Security and best practices
 
-- Secrets and credentials excluded by `.gitignore`:
+- Secrets and client configuration excluded by `.gitignore`:
+  - `config/site.local.yaml`
+  - `content/`
   - `Credentials/`
   - `*.pickle`
   - `scripts/**/ga_credentials.json`

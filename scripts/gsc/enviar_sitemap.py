@@ -3,11 +3,16 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import pickle
 import os
+import sys
 
 SCOPES = ['https://www.googleapis.com/auth/webmasters']
-SITE = "https://studiorethinkibiza.com/"
-SITEMAP_URL = "https://studiorethinkibiza.com/sitemap.xml"
-KEY_FILE = r"C:\Users\emami\proyecto_seo\credentials.json"
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CREDENTIALS_PATH = os.path.join(BASE_DIR, "Credentials", "credentials.json")
+sys.path.insert(0, os.path.join(BASE_DIR, "scripts"))
+
+from lib.site_config import gsc_site_url, sitemap_url  # noqa: E402
+
 
 def get_creds():
     creds = None
@@ -19,7 +24,7 @@ def get_creds():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(KEY_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
             creds = flow.run_local_server(port=0)
 
         with open('token.pickle', 'wb') as f:
@@ -27,13 +32,17 @@ def get_creds():
 
     return creds
 
+
 def enviar_sitemap():
+    site = gsc_site_url()
+    feed = sitemap_url()
     creds = get_creds()
     service = build('searchconsole', 'v1', credentials=creds)
 
-    print("Enviando sitemap a GSC:", SITEMAP_URL)
-    service.sitemaps().submit(siteUrl=SITE, feedpath=SITEMAP_URL).execute()
+    print("Enviando sitemap a GSC:", feed)
+    service.sitemaps().submit(siteUrl=site, feedpath=feed).execute()
     print("Sitemap enviado correctamente.")
+
 
 if __name__ == "__main__":
     enviar_sitemap()

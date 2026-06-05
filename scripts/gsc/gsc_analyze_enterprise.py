@@ -110,21 +110,38 @@ def run_analysis(input_csv: str, min_impressions: int, low_ctr_threshold: float,
 
 
 def export_report(results: dict, input_csv: str, output_dir: str) -> None:
+    try:
+        import openpyxl  # noqa: F401
+    except ImportError as exc:
+        raise ImportError(
+            "Falta openpyxl para generar el Excel. Instala con: py -m pip install openpyxl"
+        ) from exc
+
     os.makedirs(output_dir, exist_ok=True)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    q_path = os.path.join(output_dir, f"gsc_top_queries_{ts}.csv")
-    p_path = os.path.join(output_dir, f"gsc_top_pages_{ts}.csv")
-    o_path = os.path.join(output_dir, f"gsc_opportunities_{ts}.csv")
-    c_path = os.path.join(output_dir, f"gsc_cannibalization_{ts}.csv")
+    xlsx_path = os.path.join(output_dir, f"gsc_report_{ts}.xlsx")
     md_path = os.path.join(output_dir, f"gsc_executive_summary_{ts}.md")
 
-    results["top_queries"].to_csv(q_path, index=False, encoding="utf-8")
-    results["top_pages"].to_csv(p_path, index=False, encoding="utf-8")
-    results["opportunities"].to_csv(o_path, index=False, encoding="utf-8")
-    results["cannibalization"].to_csv(c_path, index=False, encoding="utf-8")
-
     k = results["kpis"]
+    kpis_df = pd.DataFrame(
+        [
+            {"metrica": "Input", "valor": input_csv},
+            {"metrica": "Filas analizadas", "valor": k["rows"]},
+            {"metrica": "Clics totales", "valor": k["total_clicks"]},
+            {"metrica": "Impresiones totales", "valor": k["total_impressions"]},
+            {"metrica": "CTR ponderado", "valor": round(k["weighted_ctr"], 4)},
+            {"metrica": "Posicion media ponderada", "valor": round(k["weighted_position"], 2)},
+        ]
+    )
+
+    with pd.ExcelWriter(xlsx_path, engine="openpyxl") as writer:
+        kpis_df.to_excel(writer, sheet_name="KPIs", index=False)
+        results["top_queries"].to_excel(writer, sheet_name="Top queries", index=False)
+        results["top_pages"].to_excel(writer, sheet_name="Top pages", index=False)
+        results["opportunities"].to_excel(writer, sheet_name="Oportunidades", index=False)
+        results["cannibalization"].to_excel(writer, sheet_name="Canibalizacion", index=False)
+
     summary = [
         "# GSC Enterprise Summary",
         "",
@@ -135,25 +152,28 @@ def export_report(results: dict, input_csv: str, output_dir: str) -> None:
         f"- Weighted CTR: **{k['weighted_ctr']:.2%}**",
         f"- Weighted avg position: **{k['weighted_position']:.2f}**",
         "",
-        "## Files generated",
-        f"- `{q_path}`",
-        f"- `{p_path}`",
-        f"- `{o_path}`",
-        f"- `{c_path}`",
+        "## Report file",
+        f"- `{xlsx_path}`",
+        "",
+        "### Sheets",
+        "- **KPIs** — resumen de metricas",
+        "- **Top queries** — 25 busquedas con mas clics",
+        "- **Top pages** — 25 URLs con mas clics",
+        "- **Oportunidades** — muchas impresiones, CTR bajo, posicion 4-20",
+        "- **Canibalizacion** — misma query en varias URLs",
     ]
     with open(md_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary) + "\n")
 
     print(f"[GSC] Summary: {md_path}")
-    print(f"[GSC] Top queries: {q_path}")
-    print(f"[GSC] Opportunities: {o_path}")
+    print(f"[GSC] Report: {xlsx_path}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Enterprise analyzer for GSC exports.")
     parser.add_argument("--input", default="", help="Path to GSC CSV export.")
     parser.add_argument("--output-dir", default=REPORT_DIR, help="Output directory for reports.")
-    parser.add_argument("--min-impressions", type=int, default=300, help="Minimum impressions filter.")
+    parser.add_argument("--min-impressions", type=int, default=50, help="Minimum impressions filter.")
     parser.add_argument("--low-ctr-threshold", type=float, default=0.02, help="Low CTR threshold.")
     parser.add_argument("--position-floor", type=float, default=4.0, help="Minimum position for opportunities.")
     args = parser.parse_args()

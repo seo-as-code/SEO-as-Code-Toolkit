@@ -5,11 +5,15 @@ import pandas as pd
 from datetime import date, timedelta
 import time, sys, os
 
-# ---------- CONFIGURA ESTO ----------
-KEY_FILE = "service_account.json"           # nombre del JSON en tu carpeta
-SITE = "https://studiorethinkibiza.com/"        # o "sc-domain:https://studiorethinkibiza.com/"
-SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
-# -------------------------------------
+import sys
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(BASE_DIR, "scripts"))
+
+from lib.site_config import gsc_site_url  # noqa: E402
+
+KEY_FILE = "service_account.json"
+SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']-
 
 end_date = date.today()
 start_date = end_date - timedelta(days=30)
@@ -18,6 +22,7 @@ if not os.path.exists(KEY_FILE):
     print(f"ERROR: no se encuentra {KEY_FILE}. Coloca la clave en la carpeta del script.")
     sys.exit(1)
 
+site = gsc_site_url()
 creds = service_account.Credentials.from_service_account_file(KEY_FILE, scopes=SCOPES)
 service = build('searchconsole', 'v1', credentials=creds)
 
@@ -29,7 +34,7 @@ def fetch_page(start_row=0, page_size=25000):
         "rowLimit": page_size,
         "startRow": start_row
     }
-    return service.searchanalytics().query(siteUrl=SITE, body=body).execute()
+    return service.searchanalytics().query(siteUrl=site, body=body).execute()
 
 def resp_to_df(resp):
     rows = resp.get("rows", [])
@@ -64,7 +69,7 @@ def fetch_all():
     return all_df
 
 if __name__ == "__main__":
-    print("Descargando GSC:", SITE, start_date, "->", end_date)
+    print("Descargando GSC:", site, start_date, "->", end_date)
     df = fetch_all()
     if df.empty:
         print("No se han obtenido filas. Revisa permisos y que la propiedad tenga datos.")

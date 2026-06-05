@@ -6,7 +6,7 @@ import pandas as pd
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DEFAULT_INPUT = os.path.join(BASE_DIR, "data", "raw", "ga4_traffic_last30days.csv")
+DEFAULT_INPUT = os.path.join(BASE_DIR, "data", "raw", "ga4_last30days.csv")
 DEFAULT_OUTPUT = os.path.join(BASE_DIR, "reports", "ga4")
 
 

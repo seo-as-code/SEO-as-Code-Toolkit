@@ -7,7 +7,7 @@ import pickle
 import os
 import json
 
-PROPERTY_ID = "286215654"  # tu Property ID de GA4
+PROPERTY_ID = os.getenv("GA4_PROPERTY_ID", "362766096")  # misma propiedad que ga4_extract.py
 SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
 CREDENTIALS_FILE = r"C:\Users\emami\Downloads\client_secret_950684690625-44usnmdsams5guknq98q8en33780ac7v.apps.googleusercontent.com.json"
 TOKEN_FILE = "ga_token.pickle"

@@ -7,7 +7,12 @@ import pandas as pd
 import os, sys
 
 SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
-SITE = "https://studiorethinkibiza.com/"
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+sys.path.insert(0, os.path.join(BASE_DIR, "scripts"))
+
+from lib.site_config import gsc_site_url  # noqa: E402
 
 def get_creds():
     creds = None
@@ -18,7 +23,6 @@ def get_creds():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             CREDENTIALS_PATH = os.path.join(BASE_DIR, "Credentials", "credentials.json")
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
             creds = flow.run_local_server(port=0)
@@ -40,8 +44,9 @@ def main():
         "rowLimit": 25000
     }
 
-    print("Consultando GSC:", SITE, start_date, "->", end_date)
-    resp = service.searchanalytics().query(siteUrl=SITE, body=body).execute()
+    site = gsc_site_url()
+    print("Consultando GSC:", site, start_date, "->", end_date)
+    resp = service.searchanalytics().query(siteUrl=site, body=body).execute()
     rows = resp.get("rows", [])
     data = []
     for r in rows:
@@ -58,7 +63,9 @@ def main():
     if df.empty:
         print("No se han obtenido filas.")
         sys.exit(0)
-    out = f"gsc_oauth_{start_date.isoformat()}_{end_date.isoformat()}.csv"
+    os.makedirs(DATA_DIR, exist_ok=True)
+    filename = f"gsc_oauth_{start_date.isoformat()}_{end_date.isoformat()}.csv"
+    out = os.path.join(DATA_DIR, filename)
     df.to_csv(out, index=False)
     print("Exportado:", out, "Filas:", len(df))
 

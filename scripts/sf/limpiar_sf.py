@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Cargar CSV original
-df = pd.read_csv(r"C:\Users\emami\proyecto_seo\data\raw\internos_todo.csv")
+df = pd.read_csv(r"C:\Users\emami\proyecto_seo\data\raw\internos_html.csv")
 
 # Renombrar columnas de español → inglés para trabajar más fácil
 df = df.rename(columns={

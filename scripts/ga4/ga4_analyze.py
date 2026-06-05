@@ -3,8 +3,8 @@ import pandas as pd
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-INPUT_CSV = os.path.join(BASE_DIR, "data", "raw", "ga4_traffic_last30days.csv")
-OUTPUT_TXT = os.path.join(BASE_DIR, "data", "raw", "ga4_traffic_last30days_analysis.txt")
+INPUT_CSV = os.path.join(BASE_DIR, "data", "raw", "ga4_last30days.csv")
+OUTPUT_TXT = os.path.join(BASE_DIR, "data", "raw", "ga4_last30days_analysis.txt")
 
 
 def analyze_ga4(csv_path: str = INPUT_CSV, output_path: str = OUTPUT_TXT) -> str:

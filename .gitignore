@@ -3,6 +3,9 @@ ai-seo-toolkit/
 
 # Local-only workspace (never commit)
 private/
+config/site.local.yaml
+content/
+proyecto_seo-index/
 
 # Python
 __pycache__/

@@ -21,6 +21,12 @@ Este repositorio implementa un enfoque **SEO-as-Code**: procesos repetibles, tra
 - Control de versiones con Git + GitHub.
 - Protección de secretos y ficheros sensibles via `.gitignore`.
 
+## Comandos de terminal (chuleta)
+
+Tabla ordenada con **todos los comandos** del pipeline (datos, análisis enterprise, módulos AI 01–12):
+
+→ **[comandos/COMANDOS_TERMINAL.md](comandos/COMANDOS_TERMINAL.md)**
+
 ## Arquitectura del proyecto
 
 ```text
@@ -63,7 +69,7 @@ proyecto_seo/
 Ejemplo:
 
 ```bash
-python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibiza.com"
+python scripts/maestro_analisis_enterprise.py --origin "https://your-domain.com"
 ```
 
 ### GSC Enterprise
@@ -71,7 +77,7 @@ python scripts/maestro_analisis_enterprise.py --origin "https://studiorethinkibi
 - `scripts/gsc/gsc_analyze_enterprise.py`
 - KPIs: clicks, impressions, CTR ponderado, posición ponderada.
 - Análisis: top queries, top pages, oportunidades SEO, canibalización.
-- Salida: CSV + resumen ejecutivo en `reports/gsc/`.
+- Salida: Excel (`gsc_report_*.xlsx`, 5 hojas) + resumen `.md` en `reports/gsc/`.
 
 Ejemplo:
 
@@ -90,7 +96,7 @@ python scripts/gsc/gsc_analyze_enterprise.py --min-impressions 500 --low-ctr-thr
 Ejemplo:
 
 ```bash
-python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_traffic_last30days.csv"
+python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_last30days.csv"
 ```
 
 ### CrUX Enterprise
@@ -104,7 +110,7 @@ python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_se
 Ejemplo:
 
 ```bash
-python scripts/crux/crux_analyze_enterprise.py --origin "https://studiorethinkibiza.com"
+python scripts/crux/crux_analyze_enterprise.py --origin "https://your-domain.com"
 ```
 
 ## Cómo ejecutar rápido (copy/paste)
@@ -131,9 +137,21 @@ Tipos de entregables:
 - `*_executive_summary_*.md` (lectura ejecutiva)
 - `*.csv` (detalle analítico para BI/Excel/QA)
 
+## Configuración local del sitio
+
+Los scripts GSC/CrUX leen tu dominio desde un archivo **local** (no va a GitHub):
+
+```powershell
+copy config\site.local.yaml.example config\site.local.yaml
+```
+
+Edita `config/site.local.yaml` con tu `origin`, `gsc_site_url` y `sitemap_url`.
+
 ## Seguridad y buenas prácticas
 
-- Secretos y credenciales excluidos por `.gitignore`:
+- Secretos y configuración de cliente excluidos por `.gitignore`:
+  - `config/site.local.yaml`
+  - `content/`
   - `Credentials/`
   - `*.pickle`
   - `scripts/**/ga_credentials.json`
