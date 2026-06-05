@@ -52,7 +52,7 @@ cd C:\Users\emami\proyecto_seo
 |--------|---------------------|--------|
 | Exportar GSC | **Sí** | `data\raw\gsc_oauth_*.csv` |
 | Exportar GA4 | No (solo etapa 2) | `data\raw\ga4_last30days.csv` |
-| Subir crawl Screaming Frog | Recomendable (módulo 07) | `data\raw\internos_todo.csv` |
+| Subir crawl Screaming Frog | Recomendable (módulo 07) | `data\raw\sf_html.csv` |
 | Test CrUX | No | pantalla |
 
 ---
@@ -124,12 +124,25 @@ py .\scripts\ga4\ga4_extract.py
 
 ### Screaming Frog
 
-1. Exporta el crawl en la app Screaming Frog.
-2. Guarda el `.csv` en `C:\Users\emami\proyecto_seo\data\raw\`
+1. Exporta el crawl en la app Screaming Frog (Internal HTML).
+2. Guarda el `.csv` como `sf_html.csv` en `C:\Users\emami\proyecto_seo\data\raw\`
 
 ```powershell
 py .\scripts\sf\leer_sf.py
 py .\scripts\sf\limpiar_sf.py
+```
+
+Salida en `data\processed\`:
+
+| Archivo | Qué es |
+|---------|--------|
+| `sf_audit.csv` | Auditoría técnica completa (Tier 1+2, incluye 404/noindex) |
+| `sf_limpio.csv` | Solo páginas indexables 200 (on-page + AI módulo 07) |
+
+### Demo Etapa 1 (todo junto)
+
+```powershell
+py .\scripts\demo_etapa1.py
 ```
 
 ### Comprobar que los datos existen
@@ -142,7 +155,7 @@ Get-ChildItem .\data\raw
 
 # Etapa 2 — Análisis enterprise (opcional)
 
-**Objetivo:** informes enterprise (GSC Excel + GA4/CrUX CSV).  
+**Objetivo:** informes enterprise (GSC + GA4 Excel, CrUX CSV).  
 **Carpeta:** `C:\Users\emami\proyecto_seo`  
 **No usa módulos AI.** No es obligatoria para la etapa 3.
 
@@ -151,7 +164,7 @@ Get-ChildItem .\data\raw
 | Acción | Comando | Salida |
 |--------|---------|--------|
 | Análisis GSC | `py .\scripts\gsc\gsc_analyze_enterprise.py` | `reports\gsc\` → `gsc_report_*.xlsx` (5 hojas) + `.md` |
-| Análisis GA4 | `py .\scripts\ga4\ga4_analyze_enterprise.py` | `reports\ga4\` |
+| Análisis GA4 | `py .\scripts\ga4\ga4_analyze_enterprise.py` | `reports\ga4\` → `ga4_report_*.xlsx` (9 hojas: origen+destino con fecha, landing pages, canales…) + `.md` |
 | Análisis CrUX | `py .\scripts\crux\crux_analyze_enterprise.py --origin "https://TU-DOMINIO.com"` | `reports\crux\` |
 | Los tres juntos | `py .\scripts\maestro_analisis_enterprise.py --origin "https://TU-DOMINIO.com"` | las 3 carpetas |
 

@@ -1,4 +1,7 @@
 python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_last30days.csv"
 
+# Salida: reports/ga4/ga4_report_FECHA.xlsx (un solo Excel, 9 hojas)
+# Hoja principal: "Origen y destino" = fecha + source/medium + URL + sesiones
+
 # Opcional (si quieres otra ruta o salida):
 python scripts/ga4/ga4_analyze_enterprise.py --input "C:\ruta\otro_ga4.csv" --output-dir "C:\Users\emami\proyecto_seo\reports\ga4"

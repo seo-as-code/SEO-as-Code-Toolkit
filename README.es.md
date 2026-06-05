@@ -44,7 +44,9 @@ proyecto_seo/
     crux/
       crux_api_test.py
       crux_analyze_enterprise.py
+    demo_etapa1.py
     sf/
+      sf_utils.py
       leer_sf.py
       limpiar_sf.py
   data/
@@ -87,16 +89,49 @@ python scripts/gsc/gsc_analyze_enterprise.py --min-impressions 500 --low-ctr-thr
 
 ### GA4 Enterprise
 
-- `scripts/ga4/ga4_extract.py` para extracción.
+- `scripts/ga4/ga4_extract.py` para extracción (incluye `page_path` y `page_title`).
 - `scripts/ga4/ga4_analyze_enterprise.py` para análisis.
-- KPIs: sessions, users, pageviews, pages/session.
-- Análisis: performance por canal, top source/medium, tendencia diaria.
-- Salida: CSV + resumen ejecutivo en `reports/ga4/`.
+- KPIs: sesiones, usuarios, pageviews, landing pages únicas, rango de fechas.
+- Análisis: **origen → destino con fecha** (source/medium + URL), landing pages, canales y fuentes por día.
+- Salida: **un Excel** (`ga4_report_*.xlsx`, 9 hojas) + resumen `.md` en `reports/ga4/`.
+
+Hojas principales del Excel:
+
+| Hoja | Contenido |
+|------|-----------|
+| Origen y destino | Fecha + fuente + URL de destino + sesiones |
+| Landing pages por día | Fecha + página + fuente |
+| Resumen periodo | Totales 30 días sin desglose diario |
+| Canales / Fuentes por día | Evolución diaria por canal y source/medium |
 
 Ejemplo:
 
 ```bash
 python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_last30days.csv"
+```
+
+### Screaming Frog
+
+- Exporta el crawl en SF y guarda `data/raw/sf_html.csv` (también acepta `internos_html.csv`).
+- `scripts/sf/sf_utils.py` — columnas Tier 1/2 y filtros compartidos.
+- `scripts/sf/limpiar_sf.py` genera dos salidas en `data/processed/`:
+
+| Archivo | Uso | Filtros |
+|---------|-----|---------|
+| `sf_audit.csv` | Auditoría técnica (404, noindex, redirects…) | Solo HTML |
+| `sf_limpio.csv` | On-page + cruce GSC / módulo AI 07 | HTML + 200 + indexable |
+
+Ejemplo:
+
+```bash
+python scripts/sf/limpiar_sf.py
+python scripts/sf/limpiar_sf.py --input data/raw/sf_html.csv
+```
+
+### Demo Etapa 1 (GSC + GA4 + CrUX + SF)
+
+```bash
+python scripts/demo_etapa1.py
 ```
 
 ### CrUX Enterprise

@@ -59,7 +59,8 @@ C:\Users\emami\proyecto_seo\
 │   ├── gsc/                       ← OAuth, fetch, analyze enterprise
 │   ├── ga4/
 │   ├── crux/
-│   ├── sf/                        ← leer_sf.py, limpiar_sf.py
+│   ├── demo_etapa1.py             ← Demo GSC + GA4 + CrUX + SF
+│   ├── sf/                        ← sf_utils.py, leer_sf.py, limpiar_sf.py
 │   └── maestro_analisis_enterprise.py   ← Etapa 2 (los 3 canales)
 │
 ├── data/raw/                      ← CSV crudos (NO en git)
@@ -117,11 +118,18 @@ py .\maestro_seo.py
 | **2 → 1** | Login GA4 (1ª vez) | `scripts/ga4/ga4_oauth.py` | credenciales |
 | **2 → 2** | Tráfico 30 días | `scripts/ga4/ga4_extract.py` | `data/raw/ga4_last30days.csv` |
 | **3** | Test CrUX | `scripts/crux/crux_api_test.py` | pantalla |
-| **4 → 1** | Leer crawl SF | `scripts/sf/leer_sf.py` | prepara rutas |
-| **4 → 2** | Limpiar SF | `scripts/sf/limpiar_sf.py` | `data/raw/internos_todo.csv` |
+| **4 → 1** | Vista previa crawl SF | `scripts/sf/leer_sf.py` | columnas del CSV |
+| **4 → 2** | Procesar SF | `scripts/sf/limpiar_sf.py` | `data/processed/sf_audit.csv` + `sf_limpio.csv` |
 
+**Entrada SF:** `data/raw/sf_html.csv` (o `internos_html.csv`).  
 **Mínimo para AI-as-Code:** menú **1 → 1** (GSC).  
-**Recomendado:** GSC + `internos_todo.csv` (módulo 07 técnico).
+**Recomendado:** GSC + `sf_audit.csv` / `sf_limpio.csv` (módulo 07 técnico).
+
+**Demo Etapa 1 completa:**
+
+```powershell
+py .\scripts\demo_etapa1.py
+```
 
 #### Opción B — Comandos directos
 
@@ -152,7 +160,7 @@ O por canal:
 | Canal | Comando | Salida |
 |-------|---------|--------|
 | GSC | `py .\scripts\gsc\gsc_analyze_enterprise.py` | `reports/gsc/gsc_report_*.xlsx` (5 hojas) + `gsc_executive_summary_*.md` |
-| GA4 | `py .\scripts\ga4\ga4_analyze_enterprise.py` | `reports/ga4/` |
+| GA4 | `py .\scripts\ga4\ga4_analyze_enterprise.py` | `reports/ga4/ga4_report_*.xlsx` (9 hojas: fecha + origen → destino, landing pages, canales/fuentes por día) + `.md` |
 | CrUX | `py .\scripts\crux\crux_analyze_enterprise.py --origin "https://..."` | `reports/crux/` |
 
 **Atajos:** `reports\code\run_full_enterprise_analysis.bat`

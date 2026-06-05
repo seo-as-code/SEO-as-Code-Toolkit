@@ -29,7 +29,7 @@ def load_credentials():
     if not token_path:
         searched_paths = "\n".join(f" - {path}" for path in token_candidates)
         raise FileNotFoundError(
-            "❌ No se encontró ga_token.pickle.\n"
+            "ERROR: No se encontro ga_token.pickle.\n"
             "Ejecuta primero scripts/ga4/ga4_oauth.py para generarlo.\n"
             f"Rutas buscadas:\n{searched_paths}"
         )
@@ -99,7 +99,7 @@ def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
     output_path = os.path.join(DATA_DIR, OUTPUT_FILE)
     df.to_csv(output_path, index=False, encoding="utf-8")
 
-    print(f"✅ Exportado: {output_path}  Filas: {len(rows)}")
+    print(f"Exportado: {output_path}  Filas: {len(rows)}")
     return output_path
 
 

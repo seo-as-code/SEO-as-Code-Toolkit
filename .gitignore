@@ -53,6 +53,8 @@ Thumbs.db
 *.log
 *.tmp
 *.bak
+.~lock.*
+**/.~lock.*
 
 # Root-level data exports (never commit)
 /gsc_*.csv
