@@ -163,14 +163,12 @@ You can run `*.ps1` or `*.bat` directly from PowerShell.
 
 Each run generates timestamped files in:
 
-- `reports/gsc/`
-- `reports/ga4/`
-- `reports/crux/`
+- `reports/gsc/` → `gsc_report_*.xlsx` (5 sheets) + summary `.md`
+- `reports/ga4/` → `ga4_report_*.xlsx` (9 sheets: date + source → destination) + summary `.md`
+- `reports/crux/` → CSV + summary `.md`
+- `data/processed/` → `sf_audit.csv` (technical audit) + `sf_limpio.csv` (on-page)
 
-Deliverables:
-
-- `*_executive_summary_*.md` (executive summary)
-- `*.csv` (detailed analytics for BI/Excel/QA)
+Generated reports and data CSVs are **not committed to GitHub** (see `.gitignore`).
 
 ## Local site configuration
 

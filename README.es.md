@@ -161,16 +161,14 @@ Puedes ejecutar `*.ps1` o `*.bat` directamente desde PowerShell.
 
 ## Dónde ver resultados
 
-Cada ejecución genera archivos versionados por timestamp en:
+Cada ejecución genera archivos con timestamp en:
 
-- `reports/gsc/`
-- `reports/ga4/`
-- `reports/crux/`
+- `reports/gsc/` → `gsc_report_*.xlsx` (5 hojas) + resumen `.md`
+- `reports/ga4/` → `ga4_report_*.xlsx` (9 hojas: fecha + origen → destino) + resumen `.md`
+- `reports/crux/` → CSV + resumen `.md`
+- `data/processed/` → `sf_audit.csv` (auditoría técnica) + `sf_limpio.csv` (on-page)
 
-Tipos de entregables:
-
-- `*_executive_summary_*.md` (lectura ejecutiva)
-- `*.csv` (detalle analítico para BI/Excel/QA)
+Los informes generados y los CSV de datos **no van a GitHub** (ver `.gitignore`).
 
 ## Configuración local del sitio
 

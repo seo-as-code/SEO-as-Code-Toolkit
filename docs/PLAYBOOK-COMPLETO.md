@@ -63,8 +63,9 @@ C:\Users\emami\proyecto_seo\
 │   ├── sf/                        ← sf_utils.py, leer_sf.py, limpiar_sf.py
 │   └── maestro_analisis_enterprise.py   ← Etapa 2 (los 3 canales)
 │
-├── data/raw/                      ← CSV crudos (NO en git)
-├── reports/                       ← Informes generados (NO CSV en git)
+├── data/raw/                      ← CSV crudos (NO en git): gsc, ga4, sf_html
+├── data/processed/                ← SF procesado (NO en git): sf_audit, sf_limpio
+├── reports/                       ← Informes generados (NO xlsx/csv en git)
 │   ├── gsc/ code/
 │   ├── ga4/ code/
 │   ├── crux/ code/
@@ -167,6 +168,8 @@ O por canal:
 
 **KPIs típicos del informe GSC:** clicks, impressions, CTR, posición media, top queries, oportunidades CTR, canibalización.
 
+**KPIs típicos del informe GA4:** sesiones por día, origen → destino (source/medium + URL), landing pages, canales y fuentes por día.
+
 ### 4.4 Documentación SEO-as-Code en Git
 
 | Documento | Ruta |
@@ -186,7 +189,7 @@ Convertir CSV de Etapa 1 (+ crawl) en **diagnóstico priorizado**: intención, g
 ### 5.2 Prerrequisitos
 
 1. Etapa 1 hecha → al menos `data/raw/gsc_oauth_*.csv`
-2. (Recomendado) `data/raw/internos_todo.csv` desde Screaming Frog
+2. (Recomendado) Screaming Frog procesado: `data/processed/sf_audit.csv` y/o `sf_limpio.csv` (entrada: `data/raw/sf_html.csv`)
 3. Copiar `ai-seo-toolkit/config/project.local.yaml.example` → `project.local.yaml` y rellenar tu sitio (no subir a GitHub)
 4. Copiar `config/site.local.yaml.example` → `config/site.local.yaml` para scripts GSC del repo padre
 
@@ -440,17 +443,41 @@ cd ..\proyecto_seo-index
 
 ## 12. Git — qué commitear después de cambiar código
 
+Repo remoto: `https://github.com/seo-as-code/SEO-as-Code-Toolkit.git`
+
+### Sí subir a GitHub
+
+| Tipo | Rutas |
+|------|-------|
+| Scripts | `scripts/` (gsc, ga4, crux, sf, `demo_etapa1.py`, `maestro_analisis_enterprise.py`) |
+| Docs | `README.md`, `README.es.md`, `docs/`, `comandos/` |
+| Comandos listos | `reports/**/code/*.bat`, `*.ps1`, `*.txt` |
+| Config plantilla | `config/site.local.yaml.example` |
+| Estructura vacía | `.gitkeep` en carpetas de datos/informes |
+
+### No subir nunca (`.gitignore`)
+
+| Tipo | Rutas |
+|------|-------|
+| Datos crudos | `data/raw/*.csv` (`gsc_oauth_*`, `ga4_last30days.csv`, `sf_html.csv`) |
+| Datos procesados | `data/processed/*.csv` (`sf_audit.csv`, `sf_limpio.csv`) |
+| Informes generados | `reports/**/*.xlsx`, `reports/**/*.csv`, `reports/**/*_summary_*.md` |
+| Secretos | `Credentials/`, `*.pickle`, `config/site.local.yaml`, `.env*` |
+| Local | `private/`, `proyecto_seo-index/`, `ai-seo-toolkit/` |
+
+### Flujo habitual
+
 ```powershell
 cd C:\Users\emami\proyecto_seo
 git status
-git add scripts/ proyecto_seo-index/src/ docs/ content/ README.es.md comandos/
-git commit -m "docs: playbook completo y ajustes monitor"
-git push
+git add scripts/ docs/ comandos/ README.md README.es.md reports/ga4/code/ .gitignore
+git commit -m "feat: describe el cambio (codigo + docs)"
+git push origin main
 ```
 
-Para **ai-seo-toolkit**, commit y push **desde esa carpeta** en su repo.
+**Ejemplo reciente (jun 2026):** GA4 pasa a un Excel con fecha + origen → destino; SF genera `sf_audit.csv` + `sf_limpio.csv` desde `sf_html.csv` vía `sf_utils.py`.
 
-**Nunca:** `git add Credentials/ data/raw/ reports/*.csv token.json credentials/`
+Para **ai-seo-toolkit**, commit y push **desde esa carpeta** en su repo aparte (`AI-SEO-Toolkit`).
 
 ---
 
