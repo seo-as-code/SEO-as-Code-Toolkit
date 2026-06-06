@@ -1,23 +1,24 @@
-# Playbook completo — SEO-as-Code · AI-as-Code · GSC Index Monitor
+# Playbook completo — SEO-as-Code · Programmatic SEO · AI-as-Code · Index Monitor
 
 Documento maestro: qué construimos, cómo encaja todo, paso a paso, qué va en Git y dónde está cada guía.
 
-**Raíz del workspace:** `C:\Users\emami\proyecto_seo`
+**Raíz del workspace:** `your-workspace` (tu clone local; no uses rutas personales tipo `C:\Users\...` en Git)
 
 ---
 
 ## 1. Visión en una frase
 
-Tres capas del mismo enfoque **SEO-as-Code** (procesos repetibles, versionados, medibles):
+Cuatro piezas del enfoque **SEO-as-Code** (procesos repetibles, versionados, medibles):
 
 ```text
-CAPA 1 — DATOS (SEO-as-Code)     →  Extraer GSC, GA4, CrUX, Screaming Frog a CSV
-CAPA 2 — ENTERPRISE (opcional)   →  Informes KPI (Excel/MD) para stakeholders
-CAPA 3 — DECISIÓN (AI-as-Code)   →  Módulos 01–12: intención, gaps, técnico, plan
-PARALELO — INDEX MONITOR          →  URLs no indexadas: sync → audit → P1/P2/P3
+CAPA 1 — DATOS (SEO-as-Code)        →  Extraer GSC, GA4, CrUX, Screaming Frog a CSV
+CAPA 2 — ENTERPRISE (opcional)      →  Informes KPI (Excel/MD) para stakeholders
+CAPA 2.5 — ARQUITECTURA (pSEO)      →  Reglas YAML → URLs programáticas priorizadas
+CAPA 3 — DECISIÓN (AI-as-Code)      →  Módulos 01–12: intención, gaps, técnico, plan
+PARALELO — INDEX MONITOR            →  URLs no indexadas: sync → audit → P1/P2/P3
 ```
 
-**Flujo habitual:** Etapa 1 → Etapa 3 (+ Monitor semanal si hay problemas de indexación).
+**Flujo habitual:** Etapa 1 → pSEO Planner → Etapa 3 (+ Monitor semanal si hay indexación).
 
 ---
 
@@ -27,6 +28,7 @@ PARALELO — INDEX MONITOR          →  URLs no indexadas: sync → audit → P
 |-----|----------------|--------|--------|
 | **SEO-as-Code Toolkit** | `proyecto_seo/` (scripts, maestro, reports/code) | [github.com/seo-as-code](https://github.com/seo-as-code) — org **seo-as-code** | Código y comandos sí; datos y credenciales no |
 | **AI-SEO-Toolkit** | `proyecto_seo/ai-seo-toolkit/` | Repo publicado aparte: **AI-SEO-Toolkit** | En `.gitignore` del repo padre → se versiona en su propio repo |
+| **Programmatic SEO** | `proyecto_seo/programmatic-seo/` | [programmatic-SEO](https://github.com/seo-as-code/programmatic-SEO) | Código y `patterns.yaml` sí; `*.local.yaml` y `reports/pseo/*` no |
 | **GSC Index Monitor** | `proyecto_seo/proyecto_seo-index/` | Dentro del monorepo `proyecto_seo` | Código sí; `credentials/`, `token.json`, `data/runs/*.csv` no |
 | **Notas entrevista** | `proyecto_seo/private/` | **Nunca** (gitignored) | `INTERVIEW_PLAYBOOK.md` solo local |
 | **Contenido publicado** | `proyecto_seo/content/` | Sí (artículos, schema, HTML) | Entregable SEO + schema |
@@ -37,7 +39,7 @@ PARALELO — INDEX MONITOR          →  URLs no indexadas: sync → audit → P
 - `data/raw/*.csv`, `reports/**/*.csv`, informes generados `*_summary_*.md`
 - `seo-automation/venv/`, `proyecto_seo-index/venv/`
 - Carpeta `private/`
-- Repo hijo `ai-seo-toolkit/` (tiene su propio remoto)
+- Repos hijos `ai-seo-toolkit/` y `programmatic-seo/` (cada uno con su propio remoto)
 
 ### Qué SÍ subir a Git
 
@@ -52,7 +54,7 @@ PARALELO — INDEX MONITOR          →  URLs no indexadas: sync → audit → P
 ## 3. Mapa de carpetas
 
 ```text
-C:\Users\emami\proyecto_seo\
+your-workspace\
 │
 ├── maestro_seo.py                 ← Menú Etapa 1 (GSC, GA4, CrUX, SF)
 ├── scripts/
@@ -73,6 +75,12 @@ C:\Users\emami\proyecto_seo\
 │
 ├── comandos/
 │   └── COMANDOS_TERMINAL.md       ← Chuleta oficial (3 etapas)
+│
+├── programmatic-seo/              ← pSEO (repo GitHub separado: Programmatic-SEO)
+│   ├── config/patterns.yaml + project.yaml
+│   ├── scripts/planner/pseo_planner.py
+│   ├── data/samples/              ← demo sin credenciales
+│   └── reports/pseo/              ← oportunidades YAML (NO en git)
 │
 ├── ai-seo-toolkit/                ← AI-as-Code (repo GitHub separado)
 │   ├── scripts/modules/01…12
@@ -103,12 +111,12 @@ Sacar datos reales de Google y del crawl a **CSV versionados localmente**, luego
 
 ### 4.2 Etapa 1 — Sacar datos
 
-**Carpeta:** `cd C:\Users\emami\proyecto_seo`
+**Carpeta:** `cd your-workspace`
 
 #### Opción A — Menú (recomendado la primera vez)
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\maestro_seo.py
 ```
 
@@ -135,7 +143,7 @@ py .\scripts\demo_etapa1.py
 #### Opción B — Comandos directos
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\scripts\gsc\gsc_oauth.py
 py .\scripts\sf\leer_sf.py
 py .\scripts\sf\limpiar_sf.py
@@ -152,7 +160,7 @@ py .\scripts\sf\limpiar_sf.py
 No usa IA. Convierte CSV de Etapa 1 en informes legibles.
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\scripts\maestro_analisis_enterprise.py --origin "https://TU-DOMINIO.com"
 ```
 
@@ -196,7 +204,7 @@ Convertir CSV de Etapa 1 (+ crawl) en **diagnóstico priorizado**: intención, g
 ### 5.3 Instalación (una vez)
 
 ```powershell
-cd C:\Users\emami\proyecto_seo\ai-seo-toolkit
+cd your-workspace\ai-seo-toolkit
 pip install -r requirements.txt
 ```
 
@@ -205,7 +213,7 @@ pip install -r requirements.txt
 Ejecuta módulos **01 → 10 → 12 → 11** (el 11 siempre al final).
 
 ```powershell
-cd C:\Users\emami\proyecto_seo\ai-seo-toolkit
+cd your-workspace\ai-seo-toolkit
 py .\scripts\orchestrator\ai_seo_master.py --gsc (Get-ChildItem ..\data\raw\gsc_oauth*.csv | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
 ```
 
@@ -237,7 +245,7 @@ O atajo:
 **Un módulo suelto:**
 
 ```powershell
-py .\scripts\modules\05_content_gaps.py --gsc C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_YYYY-MM-DD_YYYY-MM-DD.csv
+py .\scripts\modules\05_content_gaps.py --gsc your-workspace\data\raw\gsc_oauth_YYYY-MM-DD_YYYY-MM-DD.csv
 ```
 
 Atajos: `reports\code\run_module_01.ps1` … `run_module_12.ps1`
@@ -315,7 +323,7 @@ REPORT→  CSV + summary.md con prioridad y acción recomendada
 ### 6.5 Comandos
 
 ```powershell
-cd C:\Users\emami\proyecto_seo\proyecto_seo-index
+cd your-workspace\proyecto_seo-index
 ```
 
 | Acción | Comando |
@@ -384,7 +392,7 @@ Carpeta: `content/eco-friendly-renovations-ibiza/`
 
 ```powershell
 # ── 0. Siempre ──
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 
 # ── ETAPA 1: datos ──
 py .\maestro_seo.py
@@ -468,7 +476,7 @@ Repo remoto: `https://github.com/seo-as-code/SEO-as-Code-Toolkit.git`
 ### Flujo habitual
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 git status
 git add scripts/ docs/ comandos/ README.md README.es.md reports/ga4/code/ .gitignore
 git commit -m "feat: describe el cambio (codigo + docs)"

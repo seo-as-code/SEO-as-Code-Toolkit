@@ -1,5 +1,6 @@
-# Separate AI SEO repository (published independently)
+# Separate repositories (published independently)
 ai-seo-toolkit/
+programmatic-seo/
 
 # Local-only workspace (never commit)
 private/

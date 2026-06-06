@@ -11,6 +11,18 @@ Automated SEO system to extract, analyze, and report data from:
 
 This repository implements an **SEO-as-Code** approach: repeatable processes, Git-tracked workflows, and production-ready execution for teams.
 
+## SEO-as-Code ecosystem (3 repositories)
+
+| Layer | Repository | Role |
+|-------|------------|------|
+| **Data** | [SEO-as-Code-Toolkit](https://github.com/seo-as-code/SEO-as-Code-Toolkit) (this repo) | GSC, GA4, CrUX, Screaming Frog → `data/raw/` |
+| **Architecture** | [programmatic-SEO](https://github.com/seo-as-code/programmatic-SEO) | YAML rules → prioritized programmatic URL specs |
+| **Decision** | [AI-SEO-Toolkit](https://github.com/seo-as-code/AI-SEO-Toolkit) | Modules 01–12 → action plans & executive reports |
+
+**Typical flow:** Etapa 1 (this repo) → programmatic-SEO → AI-SEO-Toolkit.
+
+Clone all three into the same parent folder (`your-workspace/`) for the smoothest handoff.
+
 ## What we built
 
 - Clear project structure by data source (`scripts/gsc`, `scripts/ga4`, `scripts/crux`).
@@ -107,7 +119,7 @@ Key Excel sheets:
 Example:
 
 ```bash
-python scripts/ga4/ga4_analyze_enterprise.py --input "C:\Users\emami\proyecto_seo\data\raw\ga4_last30days.csv"
+python scripts/ga4/ga4_analyze_enterprise.py --input "your-workspace\data\raw\ga4_last30days.csv"
 ```
 
 ### Screaming Frog

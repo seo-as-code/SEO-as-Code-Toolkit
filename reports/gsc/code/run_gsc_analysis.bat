@@ -1,2 +1,3 @@
 @echo off
-python "C:\Users\emami\proyecto_seo\scripts\gsc\gsc_analyze_enterprise.py"
+cd /d "%~dp0..\..\.."
+py .\scripts\gsc\gsc_analyze_enterprise.py

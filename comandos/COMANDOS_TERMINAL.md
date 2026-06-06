@@ -2,30 +2,33 @@
 
 Copia y pega en la terminal (**Ctrl + `**). No escribes código: solo ejecutas scripts.
 
+> **Ruta:** `your-workspace` = carpeta donde clonaste este repo (ej. `D:\dev\proyecto_seo`). Sustituye en cada `cd`.
+
 ---
 
-## Mapa del proyecto (3 etapas)
+## Mapa del proyecto (4 capas)
 
 ```text
-ETAPA 1 — DATOS              ETAPA 2 — ENTERPRISE         ETAPA 3 — AI
-(proyecto_seo)               (proyecto_seo, opcional)     (ai-seo-toolkit)
-─────────────────            ─────────────────────        ─────────────────
-GSC, GA4, SF, CrUX    →      Informes CSV clásicos   →    Módulos 01–12
-CSV en data\raw\              reports\gsc, ga4, crux        Informes .md cliente
+ETAPA 1 — DATOS        ETAPA 2 — ENTERPRISE    ETAPA 2.5 — pSEO       ETAPA 3 — AI
+(proyecto_seo)         (opcional)              (programmatic-seo)     (ai-seo-toolkit)
+────────────────       ───────────────         ──────────────────     ───────────────
+GSC, GA4, SF      →    Informes KPI     →    URLs programáticas →   Módulos 01–12
+data\raw\               reports\gsc…           reports\pseo\*.yaml
 ```
 
 | Etapa | Carpeta | Para qué |
 |-------|---------|----------|
-| **1** | `C:\Users\emami\proyecto_seo` | Sacar datos a CSV |
-| **2** | `C:\Users\emami\proyecto_seo` | Analizar esos CSV (sin IA) |
-| **3** | `C:\Users\emami\proyecto_seo\ai-seo-toolkit` | Análisis AI + informe ejecutivo |
+| **1** | `your-workspace` | Sacar datos a CSV |
+| **2** | `your-workspace` | Analizar esos CSV (sin IA) |
+| **2.5** | `your-workspace\programmatic-seo` | Oportunidades pSEO (YAML) |
+| **3** | `your-workspace\ai-seo-toolkit` | Análisis AI + informe ejecutivo |
 
-**Orden habitual:** 1 → 3. La etapa 2 es opcional.
+**Orden habitual:** 1 → 2.5 → 3. La etapa 2 es opcional.
 
 **Siempre primero:**
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 ```
 
 ---
@@ -34,17 +37,18 @@ cd C:\Users\emami\proyecto_seo
 
 1. [Etapa 1 — Sacar datos](#etapa-1--sacar-datos)
 2. [Etapa 2 — Análisis enterprise](#etapa-2--análisis-enterprise-opcional)
-3. [Etapa 3 — Módulos AI](#etapa-3--módulos-ai)
-4. [Flujo completo A → Z](#flujo-completo-a--z)
-5. [Demo rápida](#demo-rápida)
-6. [Ayuda](#ayuda)
+3. [Etapa 2.5 — Programmatic SEO](#etapa-25--programmatic-seo)
+4. [Etapa 3 — Módulos AI](#etapa-3--módulos-ai)
+5. [Flujo completo A → Z](#flujo-completo-a--z)
+6. [Demo rápida](#demo-rápida)
+7. [Ayuda](#ayuda)
 
 ---
 
 # Etapa 1 — Sacar datos
 
 **Objetivo:** crear CSV en `data\raw\`.  
-**Carpeta:** `C:\Users\emami\proyecto_seo`
+**Carpeta:** `your-workspace`
 
 ## Qué puedes hacer aquí
 
@@ -62,7 +66,7 @@ cd C:\Users\emami\proyecto_seo
 Mismo resultado que los comandos sueltos, pero eliges con números.
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\maestro_seo.py
 ```
 
@@ -109,7 +113,7 @@ py .\maestro_seo.py
 ### GSC (imprescindible)
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\scripts\gsc\gsc_oauth.py
 ```
 
@@ -125,7 +129,7 @@ py .\scripts\ga4\ga4_extract.py
 ### Screaming Frog
 
 1. Exporta el crawl en la app Screaming Frog (Internal HTML).
-2. Guarda el `.csv` como `sf_html.csv` en `C:\Users\emami\proyecto_seo\data\raw\`
+2. Guarda el `.csv` como `sf_html.csv` en `your-workspace\data\raw\`
 
 ```powershell
 py .\scripts\sf\leer_sf.py
@@ -156,7 +160,7 @@ Get-ChildItem .\data\raw
 # Etapa 2 — Análisis enterprise (opcional)
 
 **Objetivo:** informes enterprise (GSC + GA4 Excel, CrUX CSV).  
-**Carpeta:** `C:\Users\emami\proyecto_seo`  
+**Carpeta:** `your-workspace`  
 **No usa módulos AI.** No es obligatoria para la etapa 3.
 
 ## Qué puedes hacer
@@ -179,16 +183,50 @@ Get-ChildItem .\data\raw
 
 ---
 
+# Etapa 2.5 — Programmatic SEO
+
+**Objetivo:** reglas YAML → URLs programáticas priorizadas (CSV + YAML).  
+**Carpeta:** `your-workspace\programmatic-seo`  
+**Repo GitHub:** `Programmatic-SEO` (independiente, como AI-SEO-Toolkit).  
+**Necesita:** CSV GSC (+ SF opcional) de la etapa 1.
+
+## Configuración (1ª vez)
+
+```powershell
+cd your-workspace\programmatic-seo
+copy config\project.local.yaml.example config\project.local.yaml
+copy config\patterns.local.yaml.example config\patterns.local.yaml
+pip install -r requirements.txt
+```
+
+Edita `project.local.yaml` y `patterns.local.yaml` (gitignored).
+
+## Demo con samples (sin datos reales)
+
+```powershell
+.\reports\code\run_planner.ps1
+```
+
+## Con datos SEO-as-Code
+
+```powershell
+.\reports\code\run_with_seo_as_code.ps1
+```
+
+**Salida:** `reports\pseo\` → `pseo_opportunities_*.yaml`, `pseo_summary_*.md`
+
+---
+
 # Etapa 3 — Módulos AI
 
 **Objetivo:** análisis inteligente + informes `.md` para cliente.  
-**Carpeta:** `C:\Users\emami\proyecto_seo\ai-seo-toolkit`  
+**Carpeta:** `your-workspace\ai-seo-toolkit`  
 **Necesita:** CSV de GSC en `proyecto_seo\data\raw\` (etapa 1).
 
 ## Entrar al toolkit
 
 ```powershell
-cd C:\Users\emami\proyecto_seo\ai-seo-toolkit
+cd your-workspace\ai-seo-toolkit
 ```
 
 **OK:** `PS ...\ai-seo-toolkit>`
@@ -214,7 +252,7 @@ Un solo comando lanza módulos **01 → 10 → 12 → 11**.
 ### Comando (copia entero — sin Tab)
 
 ```powershell
-py .\scripts\orchestrator\ai_seo_master.py --gsc C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_2026-05-02_2026-06-01.csv
+py .\scripts\orchestrator\ai_seo_master.py --gsc your-workspace\data\raw\gsc_oauth_2026-05-02_2026-06-01.csv
 ```
 
 Cambia la fecha del CSV por el tuyo, o usa el truco del CSV más reciente:
@@ -277,7 +315,7 @@ Copia bloque a bloque, en orden.
 
 ```powershell
 # ── ETAPA 1: datos ──
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\scripts\gsc\gsc_oauth.py
 Get-ChildItem .\data\raw\gsc_oauth*.csv
 
@@ -285,7 +323,7 @@ Get-ChildItem .\data\raw\gsc_oauth*.csv
 # py .\scripts\maestro_analisis_enterprise.py --origin "https://TU-DOMINIO.com"
 
 # ── ETAPA 3: AI ──
-cd C:\Users\emami\proyecto_seo\ai-seo-toolkit
+cd your-workspace\ai-seo-toolkit
 py .\scripts\orchestrator\ai_seo_master.py --gsc (Get-ChildItem ..\data\raw\gsc_oauth*.csv | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
 ```
 
@@ -296,10 +334,10 @@ Abre el informe en `reports\executive\`.
 # Demo rápida
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\scripts\gsc\gsc_oauth.py
 
-cd C:\Users\emami\proyecto_seo\ai-seo-toolkit
+cd your-workspace\ai-seo-toolkit
 py .\scripts\modules\11_executive_report.py
 ```
 
@@ -308,7 +346,7 @@ py .\scripts\modules\11_executive_report.py
 **Con menú en la etapa 1:**
 
 ```powershell
-cd C:\Users\emami\proyecto_seo
+cd your-workspace
 py .\maestro_seo.py
 ```
 
@@ -330,7 +368,7 @@ Elige **1 → 1**, luego **0** para salir, y continúa con etapa 3.
 **Solución fácil:** usa ruta completa:
 
 ```text
-C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_FECHA_FECHA.csv
+your-workspace\data\raw\gsc_oauth_FECHA_FECHA.csv
 ```
 
 ## Si el menú pide ruta de CSV
@@ -338,7 +376,7 @@ C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_FECHA_FECHA.csv
 (GSC → opción 4). Pega la ruta completa:
 
 ```text
-C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_2026-05-02_2026-06-01.csv
+your-workspace\data\raw\gsc_oauth_2026-05-02_2026-06-01.csv
 ```
 
 ## Errores frecuentes
@@ -361,4 +399,4 @@ C:\Users\emami\proyecto_seo\data\raw\gsc_oauth_2026-05-02_2026-06-01.csv
 
 ---
 
-*Proyecto: `C:\Users\emami\proyecto_seo`*
+*Proyecto: `your-workspace`*

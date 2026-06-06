@@ -1,2 +1,3 @@
 @echo off
-python "C:\Users\emami\proyecto_seo\scripts\maestro_analisis_enterprise.py" --origin "https://your-domain.com"
+cd /d "%~dp0..\.."
+py .\scripts\maestro_analisis_enterprise.py --origin "https://your-domain.com"
