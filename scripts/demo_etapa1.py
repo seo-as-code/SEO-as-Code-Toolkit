@@ -134,7 +134,7 @@ def main() -> None:
         print(f"  [{('OK' if ok else 'FALLO')}] {name}")
 
     print("\nSiguiente:")
-    print("  Etapa 2 (enterprise): py .\\scripts\\maestro_analisis_enterprise.py --origin https://studiorethinkibiza.com")
+    print("  Etapa 2 (enterprise): py .\\scripts\\maestro_analisis_enterprise.py --origin https://your-domain.com")
     print("  Etapa 3 (AI):        cd ai-seo-toolkit && py .\\scripts\\orchestrator\\ai_seo_master.py --gsc RUTA_GSC")
     print("  Index Monitor:       cd proyecto_seo-index && .\\scripts\\run.ps1")
 
