@@ -14,7 +14,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
 OUTPUT_FILE = "ga4_last30days.csv"
 
 SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
-DEFAULT_PROPERTY_ID = os.getenv("GA4_PROPERTY_ID", "362766096")
+DEFAULT_PROPERTY_ID = os.getenv("GA4_PROPERTY_ID", "")
 
 
 def load_credentials():
@@ -48,6 +48,11 @@ def load_credentials():
 
 
 def extract_ga4(property_id=DEFAULT_PROPERTY_ID):
+    if not property_id:
+        raise SystemExit(
+            "ERROR: Define la propiedad GA4 en la variable de entorno GA4_PROPERTY_ID.\n"
+            "  PowerShell: $env:GA4_PROPERTY_ID = \"123456789\""
+        )
     creds = load_credentials()
     client = BetaAnalyticsDataClient(credentials=creds)
 
